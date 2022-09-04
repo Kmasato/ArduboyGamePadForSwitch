@@ -73,17 +73,17 @@ static const uint8_t _hidReportDescriptor[] PROGMEM = {
     0xc0              // END_COLLECTION
 };
 
-uint8_t HatState::getHat()
+Hat HatState::getHat()
 {
 
     uint8_t hat_button = 0b0000;
     uint8_t i = 0;
     for (auto itr = _hat_button_state.begin(); itr != _hat_button_state.end() && i < 2; ++itr, ++i)
     {
-        hat_button |= *itr;
+        hat_button |= static_cast<uint8_t>(*itr);
     }
 
-    uint8_t hat = Hat::NEUTRAL;
+    Hat hat = Hat::NEUTRAL;
     switch (hat_button)
     {
     case 0b0000:
@@ -126,7 +126,7 @@ HatState::HatState()
 {
 }
 
-uint8_t HatState::pressHatButton(uint8_t hat_button)
+Hat HatState::pressHatButton(HatButton hat_button)
 {
     auto itr = std::find(_hat_button_state.begin(), _hat_button_state.end(), hat_button);
     if (itr == _hat_button_state.end())
@@ -137,7 +137,7 @@ uint8_t HatState::pressHatButton(uint8_t hat_button)
     return getHat();
 }
 
-uint8_t HatState::releaseHatButton(uint8_t hat_button)
+Hat HatState::releaseHatButton(HatButton hat_button)
 {
     auto itr = std::find(_hat_button_state.begin(), _hat_button_state.end(), hat_button);
     if (itr != _hat_button_state.end())
@@ -153,11 +153,11 @@ SwitchControlLibrary_::SwitchControlLibrary_()
     CustomHID().AppendDescriptor(&node);
 
     memset(&_joystickInputData, 0, sizeof(USB_JoystickReport_Input_t));
-    _joystickInputData.LX = Stick::NEUTRAL;
-    _joystickInputData.LY = Stick::NEUTRAL;
-    _joystickInputData.RX = Stick::NEUTRAL;
-    _joystickInputData.RY = Stick::NEUTRAL;
-    _joystickInputData.Hat = Hat::NEUTRAL;
+    _joystickInputData.LX = static_cast<uint8_t>(Stick::NEUTRAL);
+    _joystickInputData.LY = static_cast<uint8_t>(Stick::NEUTRAL);
+    _joystickInputData.RX = static_cast<uint8_t>(Stick::NEUTRAL);
+    _joystickInputData.RY = static_cast<uint8_t>(Stick::NEUTRAL);
+    _joystickInputData.Hat = static_cast<uint8_t>(Hat::NEUTRAL);
 }
 
 void SwitchControlLibrary_::sendReport()
@@ -169,39 +169,39 @@ void SwitchControlLibrary_::clearReport(){
     memset(&_joystickInputData, 0, sizeof(USB_JoystickReport_Input_t));
 
     for(int i=0; i<4; i++){
-        _hatState.releaseHatButton(0x01 << i);
+        _hatState.releaseHatButton(static_cast<HatButton>(0x01 << i));
     }
 
-    _joystickInputData.LX = Stick::NEUTRAL;
-    _joystickInputData.LY = Stick::NEUTRAL;
-    _joystickInputData.RX = Stick::NEUTRAL;
-    _joystickInputData.RY = Stick::NEUTRAL;
-    _joystickInputData.Hat = Hat::NEUTRAL;
+    _joystickInputData.LX = static_cast<uint8_t>(Stick::NEUTRAL);
+    _joystickInputData.LY = static_cast<uint8_t>(Stick::NEUTRAL);
+    _joystickInputData.RX = static_cast<uint8_t>(Stick::NEUTRAL);
+    _joystickInputData.RY = static_cast<uint8_t>(Stick::NEUTRAL);
+    _joystickInputData.Hat = static_cast<uint8_t>(Hat::NEUTRAL);
 }
 
-void SwitchControlLibrary_::pressButton(uint16_t button)
+void SwitchControlLibrary_::pressButton(Button button)
 {
-    _joystickInputData.Button |= button;
+    _joystickInputData.Button |= static_cast<uint16_t>(button);
 }
 
-void SwitchControlLibrary_::releaseButton(uint16_t button)
+void SwitchControlLibrary_::releaseButton(Button button)
 {
-    _joystickInputData.Button &= (button ^ 0xffff);
+    _joystickInputData.Button &= (static_cast<uint16_t>(button) ^ 0xffff);
 }
 
-void SwitchControlLibrary_::moveHat(uint8_t hat)
+void SwitchControlLibrary_::moveHat(Hat hat)
 {
-    _joystickInputData.Hat = hat;
+    _joystickInputData.Hat = static_cast<uint8_t>(hat);
 }
 
-void SwitchControlLibrary_::pressHatButton(uint8_t hat_button)
+void SwitchControlLibrary_::pressHatButton(HatButton hat_button)
 {
-    _joystickInputData.Hat = _hatState.pressHatButton(hat_button);
+    _joystickInputData.Hat =  static_cast<uint8_t>(_hatState.pressHatButton(hat_button));
 }
 
-void SwitchControlLibrary_::releaseHatButton(uint8_t hat_button)
+void SwitchControlLibrary_::releaseHatButton(HatButton hat_button)
 {
-    _joystickInputData.Hat = _hatState.releaseHatButton(hat_button);
+    _joystickInputData.Hat = static_cast<uint8_t>(_hatState.releaseHatButton(hat_button));
 }
 
 void SwitchControlLibrary_::moveLeftStick(uint8_t lx, uint8_t ly)

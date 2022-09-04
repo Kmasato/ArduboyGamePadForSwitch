@@ -31,50 +31,50 @@ https://github.com/celclow/SwitchControlLibrary
 
 #include "CustomHID.h"
 
-struct Button
+enum class Button
 {
-    static const uint16_t Y = 0x0001;
-    static const uint16_t B = 0x0002;
-    static const uint16_t A = 0x0004;
-    static const uint16_t X = 0x0008;
-    static const uint16_t L = 0x0010;
-    static const uint16_t R = 0x0020;
-    static const uint16_t ZL = 0x0040;
-    static const uint16_t ZR = 0x0080;
-    static const uint16_t MINUS = 0x0100;
-    static const uint16_t PLUS = 0x0200;
-    static const uint16_t LCLICK = 0x0400;
-    static const uint16_t RCLICK = 0x0800;
-    static const uint16_t HOME = 0x1000;
-    static const uint16_t CAPTURE = 0x2000;
+    Y = 0x0001,
+    B = 0x0002,
+    A = 0x0004,
+    X = 0x0008,
+    L = 0x0010,
+    R = 0x0020,
+    ZL = 0x0040,
+    ZR = 0x0080,
+    MINUS = 0x0100,
+    PLUS = 0x0200,
+    LCLICK = 0x0400,
+    RCLICK = 0x0800,
+    HOME = 0x1000,
+    CAPTURE = 0x2000,
 };
 
-struct Hat
+enum class Hat
 {
-    static const uint8_t UP = 0x00;
-    static const uint8_t UP_RIGHT = 0x01;
-    static const uint8_t RIGHT = 0x02;
-    static const uint8_t DOWN_RIGHT = 0x03;
-    static const uint8_t DOWN = 0x04;
-    static const uint8_t DOWN_LEFT = 0x05;
-    static const uint8_t LEFT = 0x06;
-    static const uint8_t UP_LEFT = 0x07;
-    static const uint8_t NEUTRAL = 0x08;
+    UP = 0x00,
+    UP_RIGHT = 0x01,
+    RIGHT = 0x02,
+    DOWN_RIGHT = 0x03,
+    DOWN = 0x04,
+    DOWN_LEFT = 0x05,
+    LEFT = 0x06,
+    UP_LEFT = 0x07,
+    NEUTRAL = 0x08,
 };
 
-struct HatButton
+enum class HatButton
 {
-    static const uint8_t UP = 0b0001;
-    static const uint8_t RIGHT = 0b0010;
-    static const uint8_t DOWN = 0b0100;
-    static const uint8_t LEFT = 0b1000;
+    UP = 0b0001,
+    RIGHT = 0b0010,
+    DOWN = 0b0100,
+    LEFT = 0b1000,
 };
 
-struct Stick
+enum class Stick
 {
-    static const uint8_t MIN = 0;
-    static const uint8_t NEUTRAL = 128;
-    static const uint8_t MAX = 255;
+    MIN = 0,
+    NEUTRAL = 128,
+    MAX = 255,
 };
 
 typedef struct
@@ -91,15 +91,15 @@ typedef struct
 class HatState
 {
 private:
-    std::list<uint8_t> _hat_button_state;
+    std::list<HatButton> _hat_button_state;
 
-    uint8_t getHat();
+    Hat getHat();
 
 public:
     HatState();
 
-    uint8_t pressHatButton(uint8_t hat_button);
-    uint8_t releaseHatButton(uint8_t hat_button);
+    Hat pressHatButton(HatButton hat_button);
+    Hat releaseHatButton(HatButton hat_button);
 };
 
 class SwitchControlLibrary_
@@ -113,12 +113,12 @@ public:
 
     void sendReport();
 
-    void pressButton(uint16_t button);
-    void releaseButton(uint16_t button);
+    void pressButton(Button button);
+    void releaseButton(Button button);
 
-    void moveHat(uint8_t hat);
-    void pressHatButton(uint8_t hat_button);
-    void releaseHatButton(uint8_t hat_button);
+    void moveHat(Hat hat);
+    void pressHatButton(HatButton hat_button);
+    void releaseHatButton(HatButton hat_button);
 
     void moveLeftStick(uint8_t lx, uint8_t ly);
     void moveRightStick(uint8_t rx, uint8_t ry);
@@ -127,3 +127,4 @@ public:
 };
 
 SwitchControlLibrary_ &SwitchControlLibrary();
+  
