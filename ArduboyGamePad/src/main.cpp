@@ -14,7 +14,6 @@ void PressedButton(){
   if(arduboy.pressed(A_BUTTON)&&arduboy.pressed(B_BUTTON) 
     && (arduboy.pressed(UP_BUTTON) && arduboy.pressed(LEFT_BUTTON))){
       switchCon.clearReport();
-      arduboy.print("-");
       arduboy.drawBitmap(OffsetForSelect.x, OffsetForSelect.y, PressedSubButtonBitMap, PressedSubButtonSize.width, PressedSubButtonSize.heigh, WHITE);
       switchCon.pressButton(Button::MINUS);
   }
@@ -22,43 +21,37 @@ void PressedButton(){
   else if((arduboy.pressed(A_BUTTON)&&arduboy.pressed(B_BUTTON))
     &&(arduboy.pressed(DOWN_BUTTON) && arduboy.pressed(RIGHT_BUTTON))){
       switchCon.clearReport();
-      arduboy.print("+");
       arduboy.drawBitmap(OffsetForStart.x, OffsetForStart.y, PressedSubButtonBitMap, PressedSubButtonSize.width, PressedSubButtonSize.heigh, WHITE);
       switchCon.pressButton(Button::PLUS);
   }
 
   else{
     if(arduboy.pressed(RIGHT_BUTTON)){
-      arduboy.print("->");
       arduboy.drawBitmap(OffsetForHatRight.x, OffsetForHatRight.y, PressedHatRightBitMap, PressedHatRightSize.width, PressedHatRightSize.heigh, WHITE);
       switchCon.pressHatButton(HatButton::RIGHT);
     }
     if(arduboy.pressed(LEFT_BUTTON)){
-      arduboy.print("<-");
       arduboy.drawBitmap(OffsetForHatLeft.x, OffsetForHatLeft.y, PressedHatLeftBitMap, PressedHatLeftSize.width, PressedHatLeftSize.heigh, WHITE);
       switchCon.pressHatButton(HatButton::LEFT);
     }
-    if(arduboy.pressed(UP_BUTTON)){   
-      arduboy.print("^");
+    if(arduboy.pressed(UP_BUTTON)){
       arduboy.drawBitmap(OffsetForHatUp.x, OffsetForHatUp.y, PressedHatUpBitMap, PressedHatUpSize.width, PressedHatUpSize.heigh, WHITE);
       switchCon.pressHatButton(HatButton::UP);
     }
     if(arduboy.pressed(DOWN_BUTTON)){
-      arduboy.print("v");
       arduboy.drawBitmap(OffsetForHatDown.x, OffsetForHatDown.y, PressedHatDownBitMap, PressedHatDownSize.width, PressedHatDownSize.heigh, WHITE);
       switchCon.pressHatButton(HatButton::DOWN);
     }
     if(arduboy.pressed(A_BUTTON)){
-      arduboy.print("B");
       arduboy.drawBitmap(OffsetForBbutton.x, OffsetForBbutton.y, PressedButtonBitMap, PressedButtonSize.width, PressedButtonSize.heigh, WHITE);
       switchCon.pressButton(Button::B); // switchの配置に準拠
     }
     if(arduboy.pressed(B_BUTTON)){
-      arduboy.print("A");
       arduboy.drawBitmap(OffsetForAbutton.x, OffsetForBbutton.y, PressedButtonBitMap, PressedButtonSize.width, PressedButtonSize.heigh, WHITE);
       switchCon.pressButton(Button::A); // switchの配置に準拠
     }
   }
+  
   switchCon.sendReport();
 }
 
@@ -67,36 +60,33 @@ void setup() {
   arduboy.display();
   arduboy.flashlight();
 
-  arduboy.bootLogo();
-
   arduboy.waitNoButtons();
-
-  //Serial.begin(9600);
 }
 
 void loop() {
-  // pause render until it's time for the next frame
-  if (!(arduboy.nextFrame()))
+  if (!(arduboy.nextFrame())){
     return;
-
-  // first we clear our screen to black
+  }
+  
   arduboy.clear();
-    
+  
+  // 画面上にコントローラーを表示
   arduboy.drawBitmap(0, 0, ControllerBitMap, ControllerSize.width, ControllerSize.heigh, WHITE); 
 
- if(arduboy.anyPressed(arduboy.buttonsState())){
-  arduboy.setCursor(4, 54);
-  PressedButton();
- }
- else{
-  switchCon.clearReport();
-  switchCon.sendReport();
- }
+  // ボタンの入力処理
+  if(arduboy.anyPressed(arduboy.buttonsState())){
+    PressedButton();
+  }
+  else{
+    switchCon.clearReport();
+    switchCon.sendReport();
+  }
 
+  // 下部テキスト 
+  arduboy.setCursor(4, 56);
+  arduboy.print("-:^+<+A+B");
+  arduboy.println("  +:v+>+A+B");
 
- 
-
-  // then we finally we tell the arduboy to display what we just wrote to the display
   arduboy.display();
 } 
  
