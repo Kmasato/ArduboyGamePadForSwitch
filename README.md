@@ -11,3 +11,6 @@ You can use this program to play NES contens like a below the video.
 This project is made by [Platform Io](https://platformio.org/install/ide?install=vscode) environment on VS Code.
 So, you should set up PlatformIo refering [this document](https://docs.platformio.org/en/latest/integration/ide/vscode.html#installation), if you want to build this project.
 
+## How to use
+An Arduboy with this program flashed is recognized as a USB gamepad.
+So, you should connect PC/Nintendo Switch via USB cable to use.
